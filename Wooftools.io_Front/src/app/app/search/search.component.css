@@ -1,0 +1,28 @@
+img.chainIcon {
+  height: 22px;
+  width: 22px;
+}
+img.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+span.avatarSpan {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background-color: #142028;
+  display: inline-grid;
+  text-align: center;
+  line-height: 40px;
+  vertical-align: text-top;
+  font-size: 25px;
+}
+td {
+  margin: 10px;
+  padding: 10px;
+}
+tr:hover {
+  cursor: pointer;
+  background-color: #23323c;
+}

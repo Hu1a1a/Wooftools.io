@@ -1,0 +1,339 @@
+<div class="row">
+  <div class="col-1" style="width: 2%"></div>
+  <div class="col">
+    <div
+      class="row"
+      style="
+        padding: 5px;
+        padding-left: 0px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 8px #f88523;
+        border: 1px solid #fff;
+        margin: 10px;
+        border-radius: 15px;
+      "
+    >
+      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+        <span> <mat-icon> local_fire_department </mat-icon> HOT PAIRS</span>
+      </div>
+      <div class="col" *ngIf="board.hotPairs">
+        <marquee
+          behavior="scroll"
+          direction="left"
+          scrolldelay="1000"
+          scrollamount="150"
+        >
+          <ng-container
+            *ngFor="
+              let item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+            "
+          >
+            <span
+              type="button"
+              (click)="chain.SelectedPair = board.hotPairs[item - 1]._id.pair"
+              style="line-height: 29px"
+            >
+              #{{ item }} {{ board.hotPairs[item - 1].pair.symbol }}
+              <img
+                style="margin-right: 20px"
+                *ngIf="board.hotPairs[item - 1].token.logo"
+                class="avatar"
+                [src]="
+                  'https://www.dextools.io/resources/tokens/logos/' +
+                  board.hotPairs[item - 1].token.logo
+                "
+              />
+              <span
+                style="margin-right: 20px"
+                *ngIf="!board.hotPairs[item - 1].token.logo"
+                class="avatarSpan"
+              ></span>
+            </span>
+          </ng-container>
+        </marquee>
+      </div>
+    </div>
+    <div class="row" *ngIf="chain.Chains" style="height: 660">
+      <iframe
+        id="wooftools-widget"
+        title="WoofTools Trading Chart"
+        height="750"
+        [src]="
+          'https://www.dextools.io/widgets/en/' +
+            ((chain.Chains[chain.SelectedChain].chainShortName2
+              ? chain.Chains[chain.SelectedChain].chainShortName2
+              : chain.Chains[chain.SelectedChain].chainShortName
+            ) | lowercase) +
+            '/pe-light/' +
+            (chain.SelectedPair
+              ? chain.SelectedPair
+              : chain.Chains[chain.SelectedChain].defaultPair) +
+            '?theme=dark&chartType=2&chartResolution=30&drawingToolbars=true'
+            | safe
+        "
+        referrerpolicy="no-referrer"
+      >
+      </iframe>
+    </div>
+    <div class="row" *ngIf="pair.PairsTable">
+      <div class="col">
+        <mat-button-toggle-group
+          class="grupoButtonSelect"
+          appearance="legacy"
+          [(ngModel)]="SelectedTable"
+        >
+          <mat-button-toggle value="TradeHistory"
+            >Trade History</mat-button-toggle
+          >
+          <mat-button-toggle
+            value="Holders"
+            [disabled]="!pair.PairsTable.token.audit.external"
+            >Holders</mat-button-toggle
+          >
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="row">
+      <table
+        *ngIf="pair.PairsTable && SelectedTable === 'Holders'"
+        mat-table
+        [dataSource]="pair.PairsTable.token.audit.external.goplus.holders"
+      >
+        <ng-container matColumnDef="Address">
+          <th mat-header-cell *matHeaderCellDef>Address</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [title]="element.address"
+            [cdkCopyToClipboard]="element.address"
+          >
+            {{ element.address.slice(0, 5) }}...{{ element.address.slice(-4) }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Supply">
+          <th mat-header-cell *matHeaderCellDef>Supply</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="progress position-relative">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="element.percent * 100"
+                [ariaValueNow]="element.percent * 100"
+                aria-valuemin="0"
+                aria-valuemax="99"
+                style="background-color: #3a4956"
+              ></div>
+              <small
+                style="color: #0b1217; font-weight: 400"
+                class="justify-content-center d-flex position-absolute w-99"
+              >
+                {{ element.percent * 100 | number : "0.2-2" }}%
+              </small>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.balance | number : "0.0-0" }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Value">
+          <th mat-header-cell *matHeaderCellDef>Value</th>
+          <td mat-cell *matCellDef="let element">
+            ${{ element.balance * pair.PairsTable.price | number : "0.0-0" }}
+          </td></ng-container
+        >
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns"
+          class="dialyTableHeader"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns; index as i"
+          class="dialyTableBody"
+        ></tr>
+      </table>
+
+      <table
+        *ngIf="pair.SwapsTable && SelectedTable === 'TradeHistory'"
+        mat-table
+        [dataSource]="pair.SwapsTable.swaps"
+      >
+        <ng-container matColumnDef="Date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            {{ element.timestamp * 1000 | date : "dd/MM/yyyy - hh:mm" }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#17c671' : '#ea3943'"
+          >
+            {{ element.type }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Price USD">
+          <th mat-header-cell *matHeaderCellDef>Price USD</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            ${{ priceFormat.PriceFormat(element.price) }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            ${{ priceFormat.PriceFormat(element.amountToken * element.price) }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Price ETH">
+          <th mat-header-cell *matHeaderCellDef>Price ETH</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            {{ priceFormat.PriceFormat(element.priceETH) }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Amount WOOF">
+          <th mat-header-cell *matHeaderCellDef>Amount WOOF</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            {{ element.amountToken | number : "0.2-2" }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Total ETH">
+          <th mat-header-cell *matHeaderCellDef>Total ETH</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [style.color]="element.type === 'buy' ? '#cdffe7' : '#ffacb1'"
+          >
+            {{ priceFormat.PriceFormat(element.amountETH) }}
+          </td></ng-container
+        >
+        <ng-container matColumnDef="Maker">
+          <th mat-header-cell *matHeaderCellDef>Maker</th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            [title]="element.maker"
+            [cdkCopyToClipboard]="element.maker"
+            style="color: #00b8d8"
+          >
+            {{ element.maker.slice(0, 5) }}...{{ element.maker.slice(-4) }}
+          </td></ng-container
+        >
+
+        <tr
+          mat-header-row
+          *matHeaderRowDef="displayedColumns2"
+          class="dialyTableHeader"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns2; index as i"
+          class="dialyTableBody"
+        ></tr>
+      </table>
+    </div>
+    <div class="row" style="height: 25px"></div>
+    <div class="row WOOFscore" *ngIf="pair.PairsTable">
+      <div class="row">
+        <div class="col">
+          <h2>WOOFscore</h2>
+          <h3>WOOFscore is the project reliability score based on:</h3>
+          <h4>
+            Information: {{ pair.PairsTable.dextScore.information }} points
+          </h4>
+          <h4>
+            Transactions: {{ pair.PairsTable.dextScore.transactions }} points
+          </h4>
+          <h4>Holders: {{ pair.PairsTable.dextScore.holders }} points</h4>
+          <h4>Creation: {{ pair.PairsTable.dextScore.creation }} points</h4>
+          <h4>Pool: {{ pair.PairsTable.dextScore.pool }} points</h4>
+        </div>
+        <div class="col">
+          <h1>Total WOOFscore: {{ pair.PairsTable.dextScore.total }} points</h1>
+        </div>
+      </div>
+      <div class="row" *ngIf="pair.PairsTable.votes">
+        <h2>
+          COMMUNITY TRUST ({{
+            pair.PairsTable.votes.upvotes + pair.PairsTable.votes.downvotes
+          }}
+          votes)
+        </h2>
+      </div>
+      <div class="row" *ngIf="pair.PairsTable.votes">
+        <div class="col-2 text-center" style="color: #17c671">
+          <i class="bi bi-hand-thumbs-up-fill" style="font-size: 25pt"></i>
+          <span>
+            {{
+              (pair.PairsTable.votes.upvotes /
+                (pair.PairsTable.votes.upvotes +
+                  pair.PairsTable.votes.downvotes)) *
+                100 | number : "0.2-2"
+            }}%
+          </span>
+        </div>
+        <div
+          class="col-8 progress position-relative"
+          style="height: 100%; padding: 0; background-color: #ea394380"
+        >
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [style.width.%]="
+              (pair.PairsTable.votes.upvotes /
+                (pair.PairsTable.votes.upvotes +
+                  pair.PairsTable.votes.downvotes)) *
+              100
+            "
+            [ariaValueNow]="
+              (pair.PairsTable.votes.upvotes /
+                (pair.PairsTable.votes.upvotes +
+                  pair.PairsTable.votes.downvotes)) *
+              100
+            "
+            style="background-color: #17c671"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+        <div class="col-2 text-center" style="color: #ea394380">
+          <span>
+            {{
+              (pair.PairsTable.votes.downvotes /
+                (pair.PairsTable.votes.upvotes +
+                  pair.PairsTable.votes.downvotes)) *
+                100 | number : "0.2-2"
+            }}%
+          </span>
+          <i class="bi bi-hand-thumbs-down-fill" style="font-size: 25pt"></i>
+        </div>
+      </div>
+      <div class="row" style="height: 25px"></div>
+    </div>
+  </div>
+  <div class="col-1" style="width: 2%"></div>
+</div>

@@ -1,0 +1,48 @@
+body {
+  background-color: #0b1217;
+  align-content: center;
+  text-align: center;
+}
+
+* {
+  font-size: 14pt;
+}
+tr {
+  background-color: #142028;
+}
+table {
+  background-color: #0b1217;
+}
+th {
+  vertical-align: middle;
+  color: white;
+  border-color: #142028;
+  border: 0;
+}
+th:first-child {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+th:last-child {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+td {
+  vertical-align: middle;
+  background-color: #0b1217;
+  color: white;
+  border-color: #0b1217;
+}
+.mat-header-row {
+  color: red;
+}
+
+p {
+  margin: 0;
+}
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: #23323c;
+  cursor: pointer;
+}
+

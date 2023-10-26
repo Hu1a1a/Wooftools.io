@@ -1,0 +1,164 @@
+img.avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+}
+span.avatarSpan {
+  width: 22px;
+  height: 22px;
+  border-radius: 11px;
+  background-color: #142028;
+  display: inline-grid;
+  text-align: center;
+  line-height: 22px;
+  vertical-align: text-top;
+}
+img.updatedavatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+}
+span.updatedavatarSpan {
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  background-color: #0b1217;
+  display: inline-grid;
+  text-align: center;
+  line-height: 40px;
+}
+
+mat-button-toggle {
+  color: white;
+}
+
+body {
+  background-color: #0b1217;
+  align-content: center;
+  text-align: center;
+}
+table {
+  width: 100%;
+  background-color: #0b1217;
+}
+tr {
+  background-color: #142028;
+}
+
+th,
+th span {
+  vertical-align: middle;
+  color: white;
+  border-color: #142028;
+  border: 0;
+  font-weight: 700;
+}
+
+th:first-child {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+th:last-child {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+td {
+  vertical-align: middle;
+  background-color: #0b1217;
+  color: white;
+  border-color: #0b1217;
+}
+td:hover {
+  cursor: pointer;
+}
+.mat-header-row {
+  color: red;
+}
+
+p {
+  margin: 0;
+}
+.mat-mdc-row:hover .mat-mdc-cell {
+  background: #23323c;
+  cursor: pointer;
+}
+
+.link {
+  width: 18px;
+  height: 18px;
+  size: 18px;
+  padding: 0;
+  color: white;
+}
+.updateButton {
+  color: white;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+img.chainIcon {
+  height: 22px;
+  width: 22px;
+}
+mat-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 2px 30px 2px 2px;
+  border: none;
+}
+
+.mat-button-toggle {
+  color: white;
+}
+.mat-button-toggle-checked {
+  color: white;
+  background-color: #6fbb3f;
+  border-radius: 25px;
+}
+
+mat-icon,
+i {
+  vertical-align: sub;
+}
+
+.dialyTableHeader {
+  width: 100%;
+  font-weight: 700;
+  box-shadow: 0 0 8px #6fbb3f;
+  border-radius: 15px 15px 0 0;
+  margin: 10px 10px 0 10px;
+  border: 1px solid #fff;
+  padding: 0 5px 0 5px;
+}
+.dialyTableBody {
+  box-shadow: 0 0 8px #6fbb3f;
+  border-radius: 0 0 15px 15px;
+  margin: 0 10px 10px 10px;
+  padding: 0 5px 15px 5px;
+}
+
+.grupoButtonSelect {
+  border-radius: 25px;
+  font-weight: 700;
+  box-shadow: 0 0 8px #adff2f;
+  border: 1px solid #fff;
+  border-radius: 15px 15px 15px 15px;
+  margin: 10px 10px 10px 10px;
+  padding: 5px 5px 5px 5px;
+}
+.Tablegeneralheader {
+  width: 100%;
+  font-weight: 700;
+  box-shadow: 0 0 8px #6fbb3f;
+  border-radius: 15px 15px 0 0;
+  margin: 10px 10px 0 10px;
+  padding: 0 5px 0 5px;
+}
+.Tablegeneralbody {
+  box-shadow: 0 0 8px #6fbb3f;
+  border-radius: 0 0 15px 15px;
+  margin: 0 10px 10px 10px;
+  padding: 0 5px 15px 5px;
+}

@@ -1,0 +1,29 @@
+div {
+  background-color: #131f26;
+  margin: 0;
+  align-items: center;
+}
+button {
+  border-radius: 3.125rem;
+  color: white !important;
+  margin: 12px;
+}
+img.chainIcon {
+  height: 22px;
+  width: 22px;
+}
+::ng-deep .mat-select-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid;
+  margin: 0 4px;
+}
+mat-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 2px 30px 2px 2px;
+  border: none;
+}

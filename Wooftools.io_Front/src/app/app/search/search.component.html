@@ -1,0 +1,129 @@
+<div class="row" *ngIf="search.searchedValue">
+  <div class="col-1"></div>
+  <div class="col-3">
+    <table>
+      <thead>
+        <tr>
+          <td>
+            <h1>Chains</h1>
+          </td>
+        </tr>
+      </thead>
+      <tbody *ngIf="search.PoolsTable">
+        <tr *ngFor="let item of search.PoolsTable.info.chainsTotal">
+          <td>
+            <button
+              mat-fab
+              extended
+              style="background-color: #131f26; color: white"
+              (click)="GetSearchChain(item._id)"
+            >
+              <img
+                class="chainIcon"
+                [src]="
+                  'https://www.dextools.io/resources/chains/med/' +
+                  item._id +
+                  '.png'
+                "
+                referrerpolicy="no-referrer"
+              />
+              {{ item._id }} ({{ item.count }})
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-7">
+    <table *ngIf="search.PoolsTable" style="width: 100%">
+      <thead>
+        <tr>
+          <td colspan="100%">
+            <h2>
+              {{ search.PoolsTable.results.length }} of
+              {{ search.PoolsTable.info.countTotal }} relevant results for "{{
+                search.searchedValue
+              }}"
+            </h2>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let item of search.PoolsTable.results"
+          style="margin-bottom: 10px"
+          (click)="selectPair(item)"
+        >
+          <td>
+            <img
+              *ngIf="item.token.logo"
+              class="avatar"
+              [src]="
+                'https://www.dextools.io/resources/tokens/logos/' +
+                item.token.logo
+              "
+              referrerpolicy="no-referrer"
+            />
+            <span *ngIf="!item.token.logo" class="avatarSpan"
+              >{{ item.symbol.slice(0, 1) }}
+            </span>
+          </td>
+          <td>
+            {{ item.symbol }}/{{ item.symbolRef }}<br />
+            {{ item.name }} <br />
+            {{ item.id.token.slice(0, 5) }}...{{ item.id.token.slice(-4) }}
+            <br />
+          </td>
+          <td>
+            {{ item.price ? "$" : "" }}{{ priceFormat.PriceFormat(item.price) }}
+            <ng-container *ngIf="item.price24h">
+              <span
+                *ngIf="item.price24h / item.price - 1 > 0"
+                style="color: red"
+              >
+                <br />
+                {{
+                  (item.price24h ? (item.price24h / item.price - 1) * 100 : "")
+                    | number : "0.2-2"
+                }}%
+              </span></ng-container
+            >
+          </td>
+          <td>
+            <ng-container *ngIf="item.metrics.liquidity">
+              <ng-container *ngIf="item.metrics.liquidity >= 1000000">
+                Liq. {{ item.metrics.liquidity / 1000000 | number : "0.2-2" }}M
+              </ng-container>
+              <ng-container
+                *ngIf="
+                  item.metrics.liquidity >= 1000 &&
+                  item.metrics.liquidity < 1000000
+                "
+              >
+                Liq. {{ item.metrics.liquidity / 1000 | number : "0.2-2" }}K
+              </ng-container>
+              <ng-container *ngIf="item.metrics.liquidity < 1000">
+                Liq. {{ item.metrics.liquidity | number : "0.2-2" }}
+              </ng-container></ng-container
+            >
+            <br *ngIf="item.metrics.liquidity && item.volume" />
+            <ng-container *ngIf="item.volume">
+              <ng-container *ngIf="item.volume >= 1000000">
+                Vol. {{ item.volume / 1000000 | number : "0.2-2" }}M
+              </ng-container>
+              <ng-container
+                *ngIf="item.volume >= 1000 && item.volume < 1000000"
+              >
+                Vol. {{ item.volume / 1000 | number : "0.2-2" }}K
+              </ng-container>
+              <ng-container *ngIf="item.volume < 1000">
+                Vol. {{ item.volume | number : "0.2-2" }}
+              </ng-container></ng-container
+            >
+          </td>
+          <td>WOOFscore: {{ item.dextScore.total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

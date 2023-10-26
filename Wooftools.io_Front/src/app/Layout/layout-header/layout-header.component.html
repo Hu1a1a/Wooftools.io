@@ -1,0 +1,107 @@
+<div class="row align-content-center">
+  <div
+    class="col-xs-12 col-sm-12 col-md-2 col-lg-2"
+    *ngIf="router.url === '/MultiChart'"
+  ></div>
+  <div
+    *ngIf="router.url !== '/MultiChart'"
+    class="col-xs-12 col-sm-12 col-md-2 col-lg-2"
+    style="
+      height: 36px;
+      background-color: #f88523;
+      color: white;
+      border-radius: 25px;
+      text-align: -webkit-center;
+      box-shadow: 0 0 8px #f88523;
+      border: 1px solid #fff;
+      margin: 10px;
+    "
+  >
+    <mat-select
+      [(ngModel)]="chain.SelectedChain"
+      (ngModelChange)="selectChain()"
+      *ngIf="chain.Chains"
+    >
+      <mat-select-trigger
+        *ngIf="chain.SelectedChain === 'ALL CHAINS'"
+        style="color: white; vertical-align: sub; font-weight: 700"
+      >
+        <img
+          src="https://global-uploads.webflow.com/6404bf06bac1365f02899ea3/640f362b9875951ae762304a_land-icon%20(1).svg"
+          class="chainIcon"
+        />
+        ALL CHAINS
+      </mat-select-trigger>
+      <mat-select-trigger
+        *ngIf="chain.SelectedChain !== 'ALL CHAINS'"
+        style="color: white; vertical-align: sub; font-weight: 700"
+      >
+        <img
+          class="chainIcon"
+          [src]="
+            'https://www.dextools.io' +
+            chain.Chains[chain.SelectedChain].logoUrl
+          "
+          referrerpolicy="no-referrer"
+        />
+        {{ chain.Chains[chain.SelectedChain].chainName }}
+      </mat-select-trigger>
+      <mat-option value="ALL CHAINS" *ngIf="router.url === '/WoofBoard'">
+        ALL CHAINS
+      </mat-option>
+      <mat-option *ngFor="let Chain of chain.Chains; index as i" [value]="i">
+        <img
+          class="chainIcon"
+          [src]="'https://www.dextools.io' + Chain.logoUrl"
+          referrerpolicy="no-referrer"
+        />
+        {{ Chain.chainName }}
+      </mat-option>
+    </mat-select>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+    <div class="input-group">
+      <span
+        class="input-group-text"
+        style="
+          background-color: #f88523;
+          box-shadow: 0 0 8px #f88523;
+          border: 1px solid #fff;
+          margin-left: 10px;
+        "
+      >
+        <mat-icon matSuffix style="color: white">search</mat-icon>
+      </span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search pair by simbol, name, contract or token."
+        style="
+          background-color: #23323c;
+          color: white;
+          box-shadow: 0 0 8px #f88523;
+          border: 1px solid #fff;
+          margin-right: 10px;
+        "
+        (input)="Search()"
+        [(ngModel)]="search.searchedValue"
+      />
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+    <button
+      mat-raised-button
+      style="
+        background-color: #f88523;
+        font-weight: 700;
+        box-shadow: 0 0 8px #f88523;
+        border: 1px solid #fff;
+        margin: 10px;
+      "
+      routerLink="account"
+      *ngIf="router.url !== '/account'"
+    >
+      Connect Wallet <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+</div>

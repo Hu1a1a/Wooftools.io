@@ -1,0 +1,87 @@
+<h1 mat-dialog-title style="color: white">Custom filters</h1>
+<div mat-dialog-content>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">Total liquidity </span>
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Min" [(ngModel)]="LiquidityMin" />
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Max" [(ngModel)]="LiquidityMax" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">Volume (24h) </span>
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Min" [(ngModel)]="VolumeMin" />
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Max" [(ngModel)]="VolumeMax" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">Swaps (24h) </span>
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Min" [(ngModel)]="SwapsMax" />
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Max" [(ngModel)]="SwapsMin" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">T.M.Cap. </span>
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Min" [(ngModel)]="TMCapMin" />
+    </div>
+    <div class="col-4">
+      <input type="number" placeholder="Max" [(ngModel)]="TMCapMax" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">WOOFScore </span>
+    </div>
+    <div class="col-8">
+      <select class="form-select" [(ngModel)]="WOOFScore">
+        <option value="0">No minimum selected</option>
+        <option value="30">Score >30 (low)</option>
+        <option value="50">Score >50 (medium)</option>
+        <option value="80">Score >80 (high)</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <span style="line-height: 36px">Exchange </span>
+    </div>
+    <div class="col-8">
+      <input type="text" placeholder="Exchange" [(ngModel)]="Exchange" />
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button
+      mat-button
+      (click)="Filter(); dialogRef.close()"
+      style="color: white"
+    >
+      Filter
+    </button>
+    <button
+      mat-button
+      (click)="ClearFilter(); dialogRef.close()"
+      style="color: white"
+    >
+      Clear filters
+    </button>
+    <button mat-button (click)="dialogRef.close()" style="color: white">
+      Cancer
+    </button>
+  </div>
+</div>

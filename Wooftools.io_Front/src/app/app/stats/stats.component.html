@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-1" style="width: 2%"></div>
+  <div class="col">
+    <div class="row">
+      <h1>DEXTSTATS</h1>
+      <h3>Check the current trends (hot pairs) for any exchange.</h3>
+    </div>
+    <div class="row">
+      <button
+        mat-fab
+        extended
+        style="background-color: rgba(46, 23, 242, 0.4); color: white"
+        (click)="Expand = !Expand"
+      >
+        <ng-container *ngIf="Expand">
+          <mat-icon>expand_more</mat-icon>
+          More
+        </ng-container>
+        <ng-container *ngIf="!Expand">
+          <mat-icon>expand_less</mat-icon>
+          Less
+        </ng-container>
+      </button>
+      <ng-container *ngFor="let item of swap.ChainExchangeTable; index as i">
+        <button
+          mat-fab
+          extended
+          style="background-color: #142028; color: white"
+          (click)="SelectSlug(item)"
+          *ngIf="!Expand || (Expand && i < 5)"
+        >
+          <img
+            class="avatar"
+            [src]="'https://www.dextools.io' + item.logo"
+            referrerpolicy="no-referrer"
+            style="background-color: white"
+          />
+          {{ item.name }}
+        </button>
+      </ng-container>
+    </div>
+    <div class="row">
+      <ng-container *ngFor="let slug of statTable; index as si">
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+          <div
+            class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+            style="
+              box-shadow: 0 0 8px #f88523;
+              margin: 10px;
+              border-radius: 25px;
+            "
+          >
+            <div class="row" style="padding: 10px; padding-left: 15px">
+              <div class="col-10" style="font-size: 16pt">
+                <img
+                  class="avatar"
+                  [src]="'https://www.dextools.io' + slug[1].logo"
+                  referrerpolicy="no-referrer"
+                  style="background-color: white"
+                />
+                HOT {{ slug[1].name | uppercase }}
+                <mat-icon> local_fire_department </mat-icon>
+              </div>
+              <div class="col-2">
+                <span
+                  type="button"
+                  (click)="DeleteChain(si)"
+                  style="width: 100%; text-align: end"
+                  title="Eliminar gráfico"
+                >
+                  <i
+                    class="bi bi-x"
+                    style="margin-right: 15px; font-size: 30px; color: #f88523"
+                  >
+                  </i>
+                </span>
+              </div>
+            </div>
+            <table>
+              <tbody style="font-size: 12pt">
+                <ng-container *ngFor="let pair of slug[0]; index as i">
+                  <tr>
+                    <td>#{{ i + 1 }}</td>
+                    <td>
+                      {{ pair.id ? pair.symbol : "???" }}
+                    </td>
+                    <td>
+                      {{ priceFormat.PriceFormat(pair.price) }}
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="col-1" style="width: 2%"></div>
+</div>

@@ -1,0 +1,235 @@
+<div class="row">
+  <div class="col-1" style="width: 2%"></div>
+  <div class="col">
+    <div
+      class="row"
+      style="
+        padding: 5px;
+        padding-left: 0px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 8px #f88523;
+        border: 1px solid #fff;
+        margin: 10px;
+        border-radius: 15px;
+      "
+    >
+      <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+        <span> <mat-icon> local_fire_department </mat-icon> HOT PAIRS</span>
+      </div>
+      <div class="col">
+        <marquee
+          behavior="scroll"
+          direction="left"
+          scrolldelay="1000"
+          scrollamount="150"
+        >
+          <ng-container *ngFor="let chain of multichart.HotPairs">
+            <img
+              style="margin-right: 20px"
+              class="avatar"
+              [src]="
+                'https://www.dextools.io/resources/chains/med/' +
+                chain.chain +
+                '.png'
+              "
+              referrerpolicy="no-referrer" />
+            <ng-container *ngFor="let pair of [0, 1, 2]">
+              <span
+                type="button"
+                (click)="chain.SelectedPair = chain.data[pair].id.pair"
+                style="line-height: 29px"
+                routerLink="/PairExplorer"
+                *ngIf="chain.data[pair]"
+              >
+                #{{ pair + 1 }}
+                {{ chain.data[pair].symbol }}
+                <img
+                  style="margin-right: 20px"
+                  *ngIf="chain.data[pair].token.logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    chain.data[pair].token.logo
+                  "
+                />
+                <span
+                  style="margin-right: 20px"
+                  *ngIf="!chain.data[pair].token.logo"
+                  class="avatarSpan"
+                ></span>
+              </span> </ng-container
+          ></ng-container>
+        </marquee>
+      </div>
+    </div>
+    <div class="row">
+      <h1>Multichart</h1>
+      <h3>
+        Find and add up to ten pairs in this view to display them at once.
+      </h3>
+      <h5 style="color: #818ea3">
+        <i class="bi bi-info-circle-fill" style="vertical-align: baseline"></i>
+        Note that you can drag any element to a different position
+      </h5>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div
+          class="input-group"
+          style="margin: 16px; margin-bottom: 0; margin-top: 30px"
+        >
+          <span
+            class="input-group-text"
+            style="
+              background-color: #f88523;
+              box-shadow: 0 0 8px #f88523;
+              border: 1px solid #fff;
+              margin-left: 10px;
+            "
+          >
+            <mat-icon matSuffix style="color: white">search</mat-icon>
+          </span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search pair by simbol, name, contract or token."
+            style="
+              background-color: #23323c;
+              color: white;
+              box-shadow: 0 0 8px #f88523;
+              border: 1px solid #fff;
+              margin-right: 10px;
+            "
+            (input)="SearchPair()"
+            [(ngModel)]="ChartSearch"
+          />
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <span>Select the size of the boxes: </span>
+        <mat-button-toggle-group
+          class="grupoButtonSelect"
+          appearance="legacy"
+          [(ngModel)]="SelectTableSize"
+        >
+          <mat-button-toggle value="2">Small</mat-button-toggle>
+          <mat-button-toggle value="3">Medium</mat-button-toggle>
+          <mat-button-toggle value="4">Normal</mat-button-toggle>
+          <mat-button-toggle value="6">Big</mat-button-toggle>
+          <mat-button-toggle value="12">Full</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-1" style="width: 1%"></div>
+      <div class="col" *ngIf="ChartTable && ChartSearch">
+        <table>
+          <tbody>
+            <ng-container
+              class="hoverssss"
+              *ngFor="let item of ChartTable.results; index as i"
+            >
+              <tr (click)="SelectedPair(i)">
+                <td>
+                  <img
+                    style="margin-right: 20px"
+                    *ngIf="item.token.logo"
+                    class="avatar"
+                    [src]="
+                      'https://www.dextools.io/resources/tokens/logos/' +
+                      item.token.logo
+                    "
+                  />
+                  <span
+                    style="margin-right: 20px"
+                    *ngIf="!item.token.logo"
+                    class="avatarSpan"
+                    >{{ item.symbol.slice(0, 1) }}
+                  </span>
+
+                  {{ item.symbol }} / {{ item.symbolRef }} -
+                  {{ item.token.name }}
+                </td>
+                <td>
+                  Token: ...{{ item.id.token.slice(-8) }} | Pair: ...{{
+                    item.id.pair.slice(-8)
+                  }}
+                  <img
+                    style="margin-right: 20px"
+                    class="avatar"
+                    [src]="
+                      'https://www.dextools.io/resources/chains/med/' +
+                      item.id.chain +
+                      '.png'
+                    "
+                  />
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" *ngIf="SelectedChain.length">
+      <ng-container *ngFor="let item of SelectedChain; index as i">
+        <div [class]="'col-md-' + SelectTableSize">
+          <div
+            class="col-md-12"
+            style="
+              box-shadow: 0 0 8px #f88523;
+              margin: 10px;
+              border-radius: 25px;
+            "
+          >
+            <div class="row" style="padding: 10px">
+              <div class="col-6">
+                <span
+                  type="button"
+                  (click)="AccederChain(item)"
+                  style="width: 100%"
+                  title="Ver gráfico en directo"
+                >
+                  <i
+                    class="bi bi-file-bar-graph"
+                    style="margin-left: 10px; font-size: 25px; color: #f88523"
+                  >
+                  </i>
+                </span>
+              </div>
+              <div class="col-6">
+                <span
+                  type="button"
+                  (click)="DeleteChain(i)"
+                  style="width: 100%; text-align: end"
+                  title="Eliminar gráfico"
+                >
+                  <i
+                    class="bi bi-x"
+                    style="margin-right: 15px; font-size: 30px; color: #f88523"
+                  >
+                  </i>
+                </span>
+              </div>
+            </div>
+            <iframe
+              id="wooftools-widget"
+              title="WoofTools Trading Chart"
+              [src]="
+                'https://www.dextools.io/widgets/en/' +
+                  item.id.chain +
+                  '/pe-light/' +
+                  item.id.pair +
+                  '?theme=dark&chartType=2&chartResolution=30&drawingToolbars=true'
+                  | safe
+              "
+              referrerpolicy="no-referrer"
+              style="width: 100%; height: 750px"
+            >
+            </iframe>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="col-1" style="width: 2%"></div>
+</div>

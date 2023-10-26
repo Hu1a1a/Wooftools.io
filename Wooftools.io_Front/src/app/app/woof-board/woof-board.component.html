@@ -1,0 +1,1163 @@
+<div class="row">
+  <div class="col-1" style="width: 2%"></div>
+  <div class="col">
+    <div
+      class="row"
+      style="
+        padding: 5px;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 0 8px #f88523;
+        border: 1px solid #fff;
+        margin: 10px;
+        border-radius: 15px;
+      "
+    >
+      <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+        <h1 style="margin: 0; font-weight: 700">WoofBoard.io</h1>
+      </div>
+      <div
+        class="col-xs-12 col-sm-12 col-md-7 col-lg-7"
+        style="line-height: 100%; align-self: center"
+        *ngIf="board.currentStats"
+      >
+        <div class="col">
+          <span style="color: #818ea3">Woofs:</span>
+          {{ board.currentStats.exchanges }}
+        </div>
+        <div class="col">
+          <span style="color: #818ea3">Pools: </span>
+          {{ board.currentStats.pools }}
+        </div>
+        <div class="col">
+          <span style="color: #818ea3">Tokens: </span>
+          {{ board.currentStats.tokens }}
+        </div>
+      </div>
+      <div class="col" style="align-self: center">
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckChecked"
+            [(ngModel)]="TableDisplay"
+            style="
+              background-color: #f88523;
+              box-shadow: 0 0 8px #f88523;
+              margin-left: 10px;
+              margin-right: 10px;
+              border: 0;
+            "
+          />
+          <span
+            class="form-check-label"
+            for="flexSwitchCheckChecked"
+            style="line-height: 100%"
+            >Today's trending tokens
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="TableDisplay">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <h2 class="dialyTableHeader">
+          <mat-icon>trending_up</mat-icon>Daily gainers
+        </h2>
+        <table *ngIf="board.dailyGainers" class="dialyTableBody">
+          <tbody>
+            <tr
+              *ngFor="let item of [1, 2, 3]"
+              (click)="GoPairView(board.dailyGainers[item - 1])"
+            >
+              <td></td>
+              <td
+                [style.backgroundColor]="item === 1 ? 'green' : ''"
+                style="border-radius: 5px; width: 24px; text-align: center"
+              >
+                #{{ item }}
+              </td>
+              <td>
+                <img
+                  *ngIf="board.dailyGainers[item - 1].token.logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    board.dailyGainers[item - 1].token.logo
+                  "
+                />
+                <span
+                  *ngIf="!board.dailyGainers[item - 1].token.logo"
+                  class="avatarSpan"
+                >
+                  {{ board.dailyGainers[item - 1].pair.symbol.slice(0, 1) }}
+                </span>
+                {{ board.dailyGainers[item - 1].pair.symbol }}/{{
+                  board.dailyGainers[item - 1].pair.symbolRef
+                }}
+              </td>
+              <td style="color: green">
+                ${{
+                  priceFormat.PriceFormat(board.dailyGainers[item - 1].price)
+                }}
+              </td>
+              <td style="color: green; text-align: -webkit-right; width: 10%">
+                {{ board.dailyGainers[item - 1].priceDiff | number : "0.2-2" }}%
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <h2 class="dialyTableHeader">
+          <mat-icon>trending_down</mat-icon> Daily losers
+        </h2>
+        <table *ngIf="board.dailyLosers" class="dialyTableBody">
+          <tbody>
+            <tr
+              *ngFor="let item of [1, 2, 3]"
+              (click)="GoPairView(board.dailyLosers[item - 1])"
+            >
+              <td></td>
+              <td
+                [style.backgroundColor]="item === 1 ? 'red' : ''"
+                style="border-radius: 5px; width: 24px; text-align: center"
+              >
+                #{{ item }}
+              </td>
+              <td>
+                <img
+                  *ngIf="board.dailyLosers[item - 1].token.logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    board.dailyLosers[item - 1].token.logo
+                  "
+                />
+                <span
+                  *ngIf="!board.dailyLosers[item - 1].token.logo"
+                  class="avatarSpan"
+                  >{{
+                    board.dailyLosers[item - 1].pair.symbol.slice(0, 1)
+                  }}</span
+                >
+                {{ board.dailyLosers[item - 1].pair.symbol }}/{{
+                  board.dailyLosers[item - 1].pair.symbolRef
+                }}
+              </td>
+              <td style="color: red">
+                ${{
+                  priceFormat.PriceFormat(board.dailyLosers[item - 1].price)
+                }}
+              </td>
+              <td style="color: red; text-align: -webkit-right; width: 10%">
+                {{ board.dailyLosers[item - 1].priceDiff | number : "0.2-2" }}%
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <h2 class="dialyTableHeader">
+          <mat-icon> autorenew </mat-icon> Recently updated socials
+        </h2>
+        <table *ngIf="board.recentUpdated" class="dialyTableBody">
+          <tbody>
+            <tr *ngFor="let item of [0, 1, 2]">
+              <td></td>
+              <td>
+                <img
+                  *ngIf="board.recentUpdated[item].logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    board.recentUpdated[item].logo
+                  "
+                />
+                <span
+                  *ngIf="!board.recentUpdated[item].logo"
+                  class="avatarSpan"
+                  >{{ board.recentUpdated[item].symbol.slice(0, 1) }}</span
+                >
+              </td>
+              <td>
+                {{ board.recentUpdated[item].symbol }}
+              </td>
+              <td style="color: #818ea3; text-align: -webkit-right">
+                {{ GetTime(board.recentUpdated[item].updatedAt) }}
+              </td>
+              <td style="text-align: -webkit-right">
+                <a
+                  class="link"
+                  [href]="
+                    'https://bscscan.com/token/' + board.recentUpdated[item].id
+                  "
+                >
+                  <img
+                    class="link"
+                    src="https://www.dextools.io/app/assets/img/chains/bscscan.png"
+                    referrerpolicy="no-referrer"
+                /></a>
+                <a
+                  [href]="board.recentUpdated[item].coingecko"
+                  *ngIf="board.recentUpdated[item].coingecko"
+                  class="link"
+                >
+                  <img
+                    class="link"
+                    src="https://www.dextools.io/app/assets/img/coingecko.png"
+                    referrerpolicy="no-referrer"
+                  />
+                </a>
+                <a
+                  [href]="
+                    'https://app.bubblemaps.io/bsc/token/' +
+                    board.recentUpdated[item].id
+                  "
+                  class="link"
+                >
+                  <img
+                    class="link"
+                    src="https://www.dextools.io/app/assets/img/bubblemaps.png"
+                    referrerpolicy="no-referrer"
+                  />
+                </a>
+                <a
+                  [href]="board.recentUpdated[item].metamask"
+                  *ngIf="board.recentUpdated[item].metamask"
+                  class="link"
+                >
+                  <img
+                    class="link"
+                    src="https://www.dextools.io/app/assets/img/metamask.svg"
+                    referrerpolicy="no-referrer"
+                /></a>
+                <a
+                  [href]="board.recentUpdated[item].nftCollection"
+                  *ngIf="board.recentUpdated[item].nftCollection"
+                  class="link"
+                >
+                  <svg
+                    class="link"
+                    _ngcontent-nud-c2
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    focusable="false"
+                    aria-hidden="true"
+                    viewBox="0 0 17 18"
+                    width="17"
+                    transform
+                  >
+                    <path
+                      class="link"
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M15.1241 3.80415L9.00022 0.278368C8.44362 -0.0927893 7.70131 -0.0927893 7.05179 0.278368L0.927877 3.80415C0.371157 4.17518 0 4.7319 0 5.47422V12.5258C0 13.268 0.371157 13.8247 0.927877 14.1958L7.05179 17.7216C7.70118 18.0928 8.4435 18.0928 9.00022 17.7216L15.1241 14.1958C15.7736 13.8248 16.052 13.2681 16.052 12.5258V5.47422C16.052 4.73203 15.7736 4.17531 15.1241 3.80415ZM3.06774 6.49732L4.24876 8.86541V6.18625H5.37355V11.2478C5.3738 11.5089 5.19429 11.7359 4.94021 11.7956C4.68613 11.8556 4.42426 11.7329 4.30777 11.4991V11.4994L3.12397 9.13101V11.8102H1.99919V6.74864C1.99617 6.48527 2.17644 6.25529 2.43278 6.19478C2.68912 6.13452 2.95299 6.26031 3.06774 6.49732ZM6.49834 6.74889V11.8104H7.62313V9.56086H9.31031V8.43607H7.62313V7.31128H9.8727V6.18649H7.06073C6.75016 6.18649 6.49834 6.43832 6.49834 6.74889ZM13.2471 11.8104H12.1223V7.31128H10.9975V6.18649H14.3719V7.31128H13.2471V11.8104Z"
+                      fill="#818EA3"
+                    ></path>
+                  </svg>
+                </a>
+                <a
+                  class="bi bi-github link"
+                  [href]="board.recentUpdated[item].github"
+                  *ngIf="board.recentUpdated[item].github"
+                ></a>
+                <a
+                  class="bi bi-tv link"
+                  [href]="board.recentUpdated[item].website"
+                  *ngIf="board.recentUpdated[item].website"
+                ></a>
+                <a
+                  class="bi bi-envelope link"
+                  [href]="'mailto:' + board.recentUpdated[item].email"
+                  *ngIf="board.recentUpdated[item].email"
+                ></a>
+                <a
+                  class="bi bi-telegram link"
+                  [href]="board.recentUpdated[item].telegram"
+                  *ngIf="board.recentUpdated[item].telegram"
+                ></a>
+                <a
+                  class="bi bi-twitter link"
+                  [href]="board.recentUpdated[item].twitter"
+                  *ngIf="board.recentUpdated[item].twitter"
+                ></a>
+                <a
+                  class="bi bi-discord link"
+                  [href]="board.recentUpdated[item].discord"
+                  *ngIf="board.recentUpdated[item].discord"
+                ></a>
+                <a
+                  class="bi bi-youtube link"
+                  [href]="board.recentUpdated[item].youtube"
+                  *ngIf="board.recentUpdated[item].youtube"
+                ></a>
+                <a
+                  class="bi bi-instagram link"
+                  [href]="board.recentUpdated[item].instagram"
+                  *ngIf="board.recentUpdated[item].instagram"
+                ></a>
+                <a
+                  class="bi bi-tiktok link"
+                  [href]="board.recentUpdated[item].tiktok"
+                  *ngIf="board.recentUpdated[item].tiktok"
+                ></a>
+                <a
+                  class="bi bi-facebook link"
+                  [href]="board.recentUpdated[item].facebook"
+                  *ngIf="board.recentUpdated[item].facebook"
+                ></a>
+                <a
+                  class="bi bi-medium link"
+                  [href]="board.recentUpdated[item].medium"
+                  *ngIf="board.recentUpdated[item].medium"
+                ></a>
+                <a
+                  class="bi bi-reddit link"
+                  [href]="board.recentUpdated[item].reddit"
+                  *ngIf="board.recentUpdated[item].reddit"
+                ></a>
+                <a
+                  class="bi bi-plus-circle link"
+                  [href]="board.recentUpdated[item].extraInfo"
+                  *ngIf="board.recentUpdated[item].extraInfo"
+                ></a>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row" style="padding-top: 10px" *ngIf="TableDisplay">
+      <div class="col">
+        <h2 class="dialyTableHeader">
+          <mat-icon> local_fire_department </mat-icon> Hot pairs
+        </h2>
+      </div>
+    </div>
+    <div class="row" *ngIf="TableDisplay">
+      <div
+        class="col-xs-11 col-sm-11 col-md-4 col-lg-4"
+        style="padding-right: 22"
+        *ngFor="let tab of [0, 5, 10]"
+        [style.paddingLeft.px]="tab == 0 ? 22 : 22"
+        [style.paddingRight.px]="tab == 10 ? 1 : 0"
+      >
+        <table
+          *ngIf="board.hotPairs"
+          class="dialyTableBody"
+          style="margin-left: 0; margin-right: 0"
+          [style.borderEndEndRadius.px]="tab == 10 ? 10 : 0"
+          [style.borderEndStartRadius.px]="tab == 0 ? 10 : 0"
+        >
+          <tbody style="margin: 10px">
+            <tr
+              *ngFor="let item of [1 + tab, 2 + tab, 3 + tab, 4 + tab, 5 + tab]"
+              (click)="GoPairView(board.hotPairs[item - 1])"
+            >
+              <td></td>
+              <td
+                [style.backgroundColor]="item === 1 ? 'green' : ''"
+                style="border-radius: 5px; width: 24px; text-align: center"
+              >
+                #{{ item }}
+              </td>
+              <td>
+                <img
+                  *ngIf="board.hotPairs[item - 1].token.logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    board.hotPairs[item - 1].token.logo
+                  "
+                />
+                <span
+                  *ngIf="!board.hotPairs[item - 1].token.logo"
+                  class="avatarSpan"
+                >
+                  {{ board.hotPairs[item - 1].pair.symbol.slice(0, 1) }}
+                </span>
+                {{ board.hotPairs[item - 1].pair.symbol }}/{{
+                  board.hotPairs[item - 1].pair.symbolRef
+                }}
+              </td>
+              <td
+                [style.color]="
+                  (board.hotPairs[item - 1].price /
+                    board.hotPairs[item - 1]['price24h']) *
+                    100 -
+                    100 >
+                  0
+                    ? 'green'
+                    : 'red'
+                "
+              >
+                ${{ priceFormat.PriceFormat(board.hotPairs[item - 1].price) }}
+              </td>
+              <td
+                style="text-align: -webkit-right"
+                [style.color]="
+                  (board.hotPairs[item - 1].price /
+                    board.hotPairs[item - 1]['price24h']) *
+                    100 -
+                    100 >
+                  0
+                    ? 'green'
+                    : 'red'
+                "
+              >
+                {{
+                  (board.hotPairs[item - 1].price /
+                    board.hotPairs[item - 1]["price24h"]) *
+                    100 -
+                    100 | number : "0.2-2"
+                }}%
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+        <mat-button-toggle-group
+          class="grupoButtonSelect"
+          appearance="legacy"
+          [(ngModel)]="board.selectTable"
+          (ngModelChange)="board.getTable()"
+        >
+          <mat-button-toggle value="Pairs">Pairs</mat-button-toggle>
+          <mat-button-toggle value="Gainers">Gainers</mat-button-toggle>
+          <mat-button-toggle value="Losers">Losers</mat-button-toggle>
+          <mat-button-toggle value="Updated">Updated</mat-button-toggle>
+          <mat-button-toggle value="Exchanges">Exchanges</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="col-xs-0 col-sm-0 col-md-2 col-lg-2" *ngIf="board.selectTable !== 'Exchanges'"></div>
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" style="text-align: -webkit-right">
+        <mat-button-toggle-group
+          class="grupoButtonSelect"
+          appearance="legacy"
+          [(ngModel)]="board.interval"
+          (ngModelChange)="board.getTable()"
+          *ngIf="
+            board.selectTable !== 'Updated' && board.selectTable !== 'Exchanges'
+          "
+        >
+          <mat-button-toggle value="24h">24h</mat-button-toggle>
+          <mat-button-toggle value="6h">6h</mat-button-toggle>
+          <mat-button-toggle value="1h">1h</mat-button-toggle>
+          <mat-button-toggle value="5m">5m</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div
+        class="col-xs-12 col-sm-12 col-md-3 col-lg-3"
+        style="text-align: -webkit-right"
+        *ngIf="board.selectTable === 'Exchanges'"
+      >
+        <div class="grupoButtonSelect" style="text-align: -webkit-center">
+          <mat-select
+            [(ngModel)]="chain.SelectedChain"
+            (ngModelChange)="board.getTable()"
+          >
+            <mat-select-trigger
+              *ngIf="chain.SelectedChain === 'ALL CHAINS'"
+              style="color: white; vertical-align: sub"
+              >ALL CHAINS
+            </mat-select-trigger>
+            <mat-select-trigger
+              *ngIf="chain.SelectedChain !== 'ALL CHAINS'"
+              style="color: white; vertical-align: sub"
+            >
+              <img
+                class="chainIcon"
+                [src]="
+                  'https://www.dextools.io' +
+                  chain.Chains[chain.SelectedChain].logoUrl
+                "
+                referrerpolicy="no-referrer"
+              />
+              {{ chain.Chains[chain.SelectedChain].chainName }}
+            </mat-select-trigger>
+            <mat-option value="ALL CHAINS"> ALL CHAINS </mat-option>
+            <mat-option
+              *ngFor="let Chain of chain.Chains; index as i"
+              [value]="i"
+            >
+              <img
+                class="chainIcon"
+                [src]="'https://www.dextools.io' + Chain.logoUrl"
+                referrerpolicy="no-referrer"
+              />
+              {{ Chain.chainName }}
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div
+        class="col-xs-12 col-sm-12 col-md-2 col-lg-2"
+        style="text-align: -webkit-right"
+      >
+        <mat-button-toggle
+          class="grupoButtonSelect"
+          appearance="legacy"
+          *ngIf="
+            board.selectTable !== 'Updated' && board.selectTable !== 'Exchanges'
+          "
+          (click)="openDialog()"
+        >
+          <span class="bi bi-funnel-fill" style="line-height: 36px"></span>
+          Custom filters
+        </mat-button-toggle>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col" style="text-align: -webkit-center">
+        <ng-container
+          *ngIf="
+            board.selectTable !== 'Updated' && board.selectTable !== 'Exchanges'
+          "
+        >
+          <table mat-table [dataSource]="board.table">
+            <ng-container matColumnDef="Pair">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'pair', 'symbol', '')"
+                >
+                  Pair
+                </span>
+              </th>
+              <td
+                mat-cell
+                *matCellDef="let element"
+                [title]="element._id.pair"
+                [cdkCopyToClipboard]="element._id.pair"
+              >
+                <img
+                  *ngIf="element.token.logo"
+                  class="avatar"
+                  [src]="
+                    'https://www.dextools.io/resources/tokens/logos/' +
+                    element.token.logo
+                  "
+                />
+                <span *ngIf="!element.token.logo" class="avatarSpan"
+                  >{{ element.pair.symbol.slice(0, 1) }}
+                </span>
+                {{ element.pair.symbol }}/{{ element.pair.symbolRef }}<br />
+                {{ element._id.pair.slice(0, 5) }}...{{
+                  element._id.pair.slice(-4)
+                }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Price">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'price', '', '')"
+                >
+                  Price
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                ${{ priceFormat.PriceFormat(element.price) }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="%">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="
+                    board.table[0].priceDiff
+                      ? Ordenar(Ordenado, 'priceDiff', '', '')
+                      : OrdenarDiff(Ordenado, 'price', board.interval)
+                  "
+                >
+                  % {{ board.interval }}
+                </span>
+              </th>
+              <td
+                style="text-align: center"
+                mat-cell
+                *matCellDef="let element"
+                [style.color]="
+                  element.priceDiff > 0 ||
+                  (element.price / element['price' + board.interval]) * 100 -
+                    100 >
+                    0
+                    ? 'green'
+                    : 'red'
+                "
+              >
+                {{
+                  !element.priceDiff
+                    ? ""
+                    : element.priceDiff ||
+                      (element.price / element["price" + board.interval]) *
+                        100 -
+                        100 >
+                        0
+                    ? "↗"
+                    : "↘"
+                }}
+                {{
+                  (element.priceDiff
+                    ? element.priceDiff
+                    : (element.price / element["price" + board.interval]) *
+                        100 -
+                      100
+                  ) | number : "0.2-2"
+                }}
+                {{
+                  element.priceDiff ||
+                  element.price / element["price" + board.interval]
+                    ? "%"
+                    : "-"
+                }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="WoofScore">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'pair', 'dextScore', 'total')"
+                >
+                  WoofScore
+                </span>
+              </th>
+              <td style="text-align: center" mat-cell *matCellDef="let element">
+                <div class="progress position-relative">
+                  <div
+                    class="progress-bar"
+                    role="progressbar"
+                    [style.width.%]="element.pair.dextScore.total"
+                    [ariaValueNow]="element.pair.dextScore.total"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [style.backgroundColor]="
+                      element.pair.dextScore.total < 30
+                        ? '#DC143C'
+                        : element.pair.dextScore.total < 50
+                        ? '#FFD700'
+                        : element.pair.dextScore.total < 80
+                        ? '#f88523'
+                        : '#6fbb3f'
+                    "
+                    [style.boxShadow]="
+                      element.pair.dextScore.total < 30
+                        ? '0 0 8px #DC143C'
+                        : element.pair.dextScore.total < 50
+                        ? '0 0 8px #FFD700'
+                        : element.pair.dextScore.total < 80
+                        ? '0 0 8px #f88523'
+                        : '0 0 8px #6fbb3f'
+                    "
+                  ></div>
+                  <small
+                    style="color: #0b1217; font-weight: 400"
+                    class="justify-content-center d-flex position-absolute w-100"
+                    >{{
+                      element.pair.dextScore.total | number : "0.0-0"
+                    }}</small
+                  >
+                </div>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Created">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                Created
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                {{
+                  element.pair.creationTime
+                    ? GetTime(element.pair.creationTime.slice(0, 10))
+                    : "-"
+                }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Volumen">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                Volumen
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                <ng-container
+                  *ngIf="
+                    element.volume >= 1000000 ||
+                    element['volume' + board.interval] >= 1000000
+                  "
+                >
+                  ${{ element.volume / 1000000 | number : "0.2-2"
+                  }}{{
+                    element["volume" + board.interval] / 1000000
+                      | number : "0.2-2"
+                  }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    (element.volume >= 1000 && element.volume < 999999) ||
+                    (element['volume' + board.interval] >= 1000 &&
+                      element['volume' + board.interval] < 999999)
+                  "
+                >
+                  ${{ element.volume / 1000 | number : "0.2-2"
+                  }}{{
+                    element["volume" + board.interval] / 1000
+                      | number : "0.2-2"
+                  }}K
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    (element.volume && element.volume < 1000) ||
+                    (element['volume' + board.interval] &&
+                      element['volume' + board.interval] < 1000)
+                  "
+                >
+                  ${{ element.volume | number : "0.2-2"
+                  }}{{ element["volume" + board.interval] | number : "0.2-2" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Swaps">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'swaps', '', '')"
+                >
+                  Swaps
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                <ng-container
+                  *ngIf="
+                    (element.swaps || element['swaps' + board.interval]) &&
+                    (element.swaps >= 1000 ||
+                      element['swaps' + board.interval] >= 1000)
+                  "
+                >
+                  {{
+                    element.swaps / 1000 ||
+                      element["swaps" + board.interval] / 1000
+                      | number : "0.2-2"
+                  }}K
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    (element.swaps || element['swaps' + board.interval]) &&
+                    (element.swaps < 1000 ||
+                      element['swaps' + board.interval] < 1000)
+                  "
+                >
+                  {{
+                    element.swaps || element["swaps" + board.interval]
+                      | number : "0.0-0"
+                  }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Liquidity">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'pair', 'metrics', 'liquidity')"
+                >
+                  Liquidity
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                <ng-container *ngIf="element.pair.metrics.liquidity >= 1000000">
+                  ${{
+                    element.pair.metrics.liquidity / 1000000 | number : "0.2-2"
+                  }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.pair.metrics.liquidity >= 1000 &&
+                    element.pair.metrics.liquidity < 1000000
+                  "
+                >
+                  ${{
+                    element.pair.metrics.liquidity / 1000 | number : "0.2-2"
+                  }}K
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.pair.metrics.liquidity &&
+                    element.pair.metrics.liquidity < 1000
+                  "
+                >
+                  ${{ element.pair.metrics.liquidity | number : "0.2-2" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="T.M.Cap.">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'token', 'metrics', 'fdv')"
+                >
+                  T.M.Cap.
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                <ng-container *ngIf="element.token.metrics.fdv >= 1000000000">
+                  ${{
+                    element.token.metrics.fdv / 1000000000 | number : "0.2-2"
+                  }}B
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.token.metrics.fdv >= 1000000 &&
+                    element.token.metrics.fdv < 1000000000
+                  "
+                >
+                  ${{ element.token.metrics.fdv / 1000000 | number : "0.2-2" }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.token.metrics.fdv >= 1000 &&
+                    element.token.metrics.fdv < 1000000
+                  "
+                >
+                  ${{ element.token.metrics.fdv / 1000 | number : "0.2-2" }}K
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.token.metrics.fdv &&
+                    element.token.metrics.fdv < 1000
+                  "
+                >
+                  ${{ element.token.metrics.fdv | number : "0.2-2" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Exchange">
+              <th mat-header-cell *matHeaderCellDef style="text-align: center">
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, '_id', 'exchange', '')"
+                >
+                  Exchange
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element" style="text-align: center">
+                {{ element._id.exchange }}
+              </td>
+            </ng-container>
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumns"
+              class="dialyTableHeader"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: displayedColumns; index as i"
+              class="dialyTableBody"
+              (click)="GoPairView(board.table[i])"
+            ></tr>
+          </table>
+        </ng-container>
+        <ng-container *ngIf="board.selectTable === 'Updated'">
+          <div style="background-color: #142028; border-radius: 25px">
+            <h1>Last updated tokens</h1>
+            <h5>
+              Below is a list of the cryptocurrencies and token social links
+              that have been updated most recently.
+            </h5>
+          </div>
+          <ng-container *ngFor="let item of board.table; index as i">
+            <button
+              class="updateButton"
+              style="width: 32%; height: 100px; background-color: #142028"
+            >
+              <div class="row">
+                <div class="col-2">
+                  <img
+                    *ngIf="item.logo"
+                    class="updatedavatar"
+                    [src]="
+                      'https://www.dextools.io/resources/tokens/logos/' +
+                      item.logo
+                    "
+                  />
+                  <span *ngIf="!item.logo" class="updatedavatarSpan">{{
+                    item.symbol.slice(0, 1)
+                  }}</span>
+                </div>
+                <div class="col-4">
+                  <div class="row" style="height: 20px">{{ item.symbol }}</div>
+                  <div class="row" style="height: 40px">{{ item.name }}</div>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-4">
+                  <div class="row" style="height: 40px">
+                    <ng-container>
+                      <a
+                        class="link"
+                        [href]="'https://bscscan.com/token/' + item.id"
+                      >
+                        <img
+                          class="link"
+                          src="https://www.dextools.io/app/assets/img/chains/bscscan.png"
+                          referrerpolicy="no-referrer"
+                      /></a>
+                      <a
+                        [href]="item.coingecko"
+                        *ngIf="item.coingecko"
+                        class="link"
+                      >
+                        <img
+                          class="link"
+                          src="https://www.dextools.io/app/assets/img/coingecko.png"
+                          referrerpolicy="no-referrer"
+                        />
+                      </a>
+                      <a
+                        [href]="
+                          'https://app.bubblemaps.io/bsc/token/' + item.id
+                        "
+                        class="link"
+                      >
+                        <img
+                          class="link"
+                          src="https://www.dextools.io/app/assets/img/bubblemaps.png"
+                          referrerpolicy="no-referrer"
+                        />
+                      </a>
+                      <a
+                        [href]="item.metamask"
+                        *ngIf="item.metamask"
+                        class="link"
+                      >
+                        <img
+                          class="link"
+                          src="https://www.dextools.io/app/assets/img/metamask.svg"
+                          referrerpolicy="no-referrer"
+                      /></a>
+                      <a
+                        [href]="item.nftCollection"
+                        *ngIf="item.nftCollection"
+                        class="link"
+                      >
+                        <svg
+                          class="link"
+                          _ngcontent-nud-c2
+                          fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          focusable="false"
+                          aria-hidden="true"
+                          viewBox="0 0 17 18"
+                          width="17"
+                          transform
+                        >
+                          <path
+                            class="link"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M15.1241 3.80415L9.00022 0.278368C8.44362 -0.0927893 7.70131 -0.0927893 7.05179 0.278368L0.927877 3.80415C0.371157 4.17518 0 4.7319 0 5.47422V12.5258C0 13.268 0.371157 13.8247 0.927877 14.1958L7.05179 17.7216C7.70118 18.0928 8.4435 18.0928 9.00022 17.7216L15.1241 14.1958C15.7736 13.8248 16.052 13.2681 16.052 12.5258V5.47422C16.052 4.73203 15.7736 4.17531 15.1241 3.80415ZM3.06774 6.49732L4.24876 8.86541V6.18625H5.37355V11.2478C5.3738 11.5089 5.19429 11.7359 4.94021 11.7956C4.68613 11.8556 4.42426 11.7329 4.30777 11.4991V11.4994L3.12397 9.13101V11.8102H1.99919V6.74864C1.99617 6.48527 2.17644 6.25529 2.43278 6.19478C2.68912 6.13452 2.95299 6.26031 3.06774 6.49732ZM6.49834 6.74889V11.8104H7.62313V9.56086H9.31031V8.43607H7.62313V7.31128H9.8727V6.18649H7.06073C6.75016 6.18649 6.49834 6.43832 6.49834 6.74889ZM13.2471 11.8104H12.1223V7.31128H10.9975V6.18649H14.3719V7.31128H13.2471V11.8104Z"
+                            fill="#818EA3"
+                          ></path>
+                        </svg>
+                      </a>
+                      <a
+                        class="bi bi-github link"
+                        [href]="item.github"
+                        *ngIf="item.github"
+                      ></a>
+                      <a
+                        class="bi bi-tv link"
+                        [href]="item.website"
+                        *ngIf="item.website"
+                      ></a>
+                      <a
+                        class="bi bi-envelope link"
+                        [href]="'mailto:' + item.email"
+                        *ngIf="item.email"
+                      ></a>
+                      <a
+                        class="bi bi-telegram link"
+                        [href]="item.telegram"
+                        *ngIf="item.telegram"
+                      ></a>
+                      <a
+                        class="bi bi-twitter link"
+                        [href]="item.twitter"
+                        *ngIf="item.twitter"
+                      ></a>
+                      <a
+                        class="bi bi-discord link"
+                        [href]="item.discord"
+                        *ngIf="item.discord"
+                      ></a>
+                      <a
+                        class="bi bi-youtube link"
+                        [href]="item.youtube"
+                        *ngIf="item.youtube"
+                      ></a>
+                      <a
+                        class="bi bi-instagram link"
+                        [href]="item.instagram"
+                        *ngIf="item.instagram"
+                      ></a>
+                      <a
+                        class="bi bi-tiktok link"
+                        [href]="item.tiktok"
+                        *ngIf="item.tiktok"
+                      ></a>
+                      <a
+                        class="bi bi-facebook link"
+                        [href]="item.facebook"
+                        *ngIf="item.facebook"
+                      ></a>
+                      <a
+                        class="bi bi-medium link"
+                        [href]="item.medium"
+                        *ngIf="item.medium"
+                      ></a>
+                      <a
+                        class="bi bi-reddit link"
+                        [href]="item.reddit"
+                        *ngIf="item.reddit"
+                      ></a>
+                      <a
+                        class="bi bi-plus-circle link"
+                        [href]="item.extraInfo"
+                        *ngIf="item.extraInfo"
+                      ></a>
+                    </ng-container>
+                  </div>
+                  <div class="row">{{ GetTime(item.updatedAt) }}</div>
+                </div>
+                <div class="col-1" style="width: 2%"></div>
+              </div>
+            </button>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="board.selectTable === 'Exchanges'">
+          <table mat-table [dataSource]="board.table">
+            <ng-container matColumnDef="Exchange">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, '_id', 'exchange', '')"
+                >
+                  Exchange
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                {{ element._id.exchange }}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Pools">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'pairs', '', '')"
+                >
+                  Pools
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.pairs >= 1000000">
+                  {{ element.pairs / 1000000 | number : "0.2-2" }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="element.pairs >= 1000 && element.pairs < 1000000"
+                >
+                  {{ element.pairs / 1000 | number : "0.2-2" }}K
+                </ng-container>
+                <ng-container *ngIf="element.pairs && element.pairs < 1000">
+                  {{ element.pairs | number : "0.0-0" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Volume 24h">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'volume', '', '')"
+                >
+                  Volume 24h
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.volume >= 1000000000">
+                  ${{ element.volume / 1000000000 | number : "0.2-2" }}B
+                </ng-container>
+                <ng-container
+                  *ngIf="
+                    element.volume >= 1000000 && element.volume < 1000000000
+                  "
+                >
+                  ${{ element.volume / 1000000 | number : "0.2-2" }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="element.volume >= 1000 && element.volume < 999999"
+                >
+                  ${{ element.volume / 1000 | number : "0.2-2" }}K
+                </ng-container>
+                <ng-container *ngIf="element.volume && element.volume < 1000">
+                  ${{ element.volume | number : "0.0-0" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Swaps 24h">
+              <th mat-header-cell *matHeaderCellDef>
+                <span
+                  type="button"
+                  style="width: 100%; height: 100%"
+                  (click)="Ordenar(Ordenado, 'swaps', '', '')"
+                >
+                  Swaps 24h
+                </span>
+              </th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.swaps >= 1000000">
+                  ${{ element.swaps / 1000000 | number : "0.2-2" }}M
+                </ng-container>
+                <ng-container
+                  *ngIf="element.swaps >= 1000 && element.swaps < 1000000"
+                >
+                  ${{ element.swaps / 1000 | number : "0.2-2" }}K
+                </ng-container>
+                <ng-container *ngIf="element.swaps && element.swaps < 1000">
+                  ${{ element.swaps | number : "0.0-0" }}
+                </ng-container>
+              </td>
+            </ng-container>
+            <tr
+              mat-header-row
+              *matHeaderRowDef="displayedColumnsExchanges"
+              class="Tablegeneralheader"
+            ></tr>
+            <tr
+              mat-row
+              *matRowDef="
+                let row;
+                columns: displayedColumnsExchanges;
+                index as i
+              "
+              class="Tablegeneralbody"
+            ></tr>
+          </table>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="col-1" style="width: 2%"></div>
+</div>
